@@ -75,3 +75,52 @@ pub fn create_campaign(
 
     Ok(())
 }
+
+
+#[derive(Accounts)]
+pub struct Donate<'info> {
+
+    
+    #[account(mut)]
+    pub donor: Signer<'info>,
+
+    
+    #[account(
+        mut,
+        seeds = [
+            b"campaign",
+            campaign.owner.as_ref(),
+            campaign_id.to_le_bytes().as_ref()
+        ],
+        bump
+    )]
+    pub campaign: Account<'info, Campaign>,
+
+    // 3️⃣ Vault (will receive SOL)
+    #[account(
+        mut,
+        seeds = [
+            b"vault",
+            campaign.key().as_ref()
+        ],
+        bump
+    )]
+    pub vault: SystemAccount<'info>,
+
+    // 4️⃣ Donation PDA (tracks donor amount)
+    #[account(
+        init_if_needed,
+        payer = donor,
+        space = 8 + Donation::INIT_SPACE,
+        seeds = [
+            b"donation",
+            campaign.key().as_ref(),
+            donor.key().as_ref()
+        ],
+        bump
+    )]
+    pub donation: Account<'info, Donation>,
+
+    // 5️⃣ Required for transfers
+    pub system_program: Program<'info, System>,
+}

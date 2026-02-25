@@ -11,12 +11,11 @@ pub mod crowdfi {
     use super::*;
 
     pub fn initialize(
-        ctx: Context<CompaignAccounts>,
+        ctx: Context<CompaignAccount>,
         title: String,
         goal: u64,
         end_time: i64,
     ) -> Result<()> {
-        create_campaign(ctx, title, goal, end_time)?;
         Ok(())
     }
 }

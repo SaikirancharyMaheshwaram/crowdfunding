@@ -1,7 +1,5 @@
 use anchor_lang::prelude::*;
 
-use crate::error::CustomError;
-
 #[derive(InitSpace)]
 #[account]
 pub struct Campaign {
@@ -15,6 +13,10 @@ pub struct Campaign {
     pub withdrawn: bool,
 }
 
-
-
-
+#[derive(InitSpace)]
+#[account]
+pub struct Donation {
+    pub campaign: Pubkey,
+    pub donor: Pubkey,
+    pub amount: u64,
+}
