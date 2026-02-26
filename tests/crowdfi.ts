@@ -120,7 +120,7 @@ describe("crowdfi", () => {
     const amount = new BN(200_000_000);
 
     await program.methods
-      .donate(campaignId, amount)
+      .donate(amount)
       .accounts({
         donor: donor.publicKey,
         campaign,
@@ -151,7 +151,7 @@ describe("crowdfi", () => {
 
     const donation1 = deriveDonationPda(campaign, donor1.publicKey);
     await program.methods
-      .donate(campaignId, goal)
+      .donate(goal)
       .accounts({
         donor: donor1.publicKey,
         campaign,
@@ -165,7 +165,7 @@ describe("crowdfi", () => {
     const donation2 = deriveDonationPda(campaign, donor2.publicKey);
     await expectAnchorError(
       program.methods
-        .donate(campaignId, new BN(1))
+        .donate(new BN(1))
         .accounts({
           donor: donor2.publicKey,
           campaign,
@@ -193,7 +193,7 @@ describe("crowdfi", () => {
     const donation = deriveDonationPda(campaign, donor.publicKey);
     await expectAnchorError(
       program.methods
-        .donate(campaignId, new BN(10_000_000))
+        .donate(new BN(10_000_000))
         .accounts({
           donor: donor.publicKey,
           campaign,
@@ -218,7 +218,7 @@ describe("crowdfi", () => {
 
     const donation = deriveDonationPda(campaign, donor.publicKey);
     await program.methods
-      .donate(campaignId, goal)
+      .donate(goal)
       .accounts({
         donor: donor.publicKey,
         campaign,
@@ -230,7 +230,7 @@ describe("crowdfi", () => {
       .rpc();
 
     await program.methods
-      .withdraw(campaignId)
+      .withdraw()
       .accounts({
         owner: owner.publicKey,
         campaign,
@@ -241,7 +241,7 @@ describe("crowdfi", () => {
 
     await expectAnchorError(
       program.methods
-        .withdraw(campaignId)
+        .withdraw()
         .accounts({
           owner: owner.publicKey,
           campaign,
@@ -264,7 +264,7 @@ describe("crowdfi", () => {
 
     const donation = deriveDonationPda(campaign, donor.publicKey);
     await program.methods
-      .donate(campaignId, new BN(100_000_000))
+      .donate(new BN(100_000_000))
       .accounts({
         donor: donor.publicKey,
         campaign,
@@ -277,7 +277,7 @@ describe("crowdfi", () => {
 
     await expectAnchorError(
       program.methods
-        .refund(campaignId)
+        .refund()
         .accounts({
           donor: donor.publicKey,
           campaign,
@@ -302,7 +302,7 @@ describe("crowdfi", () => {
 
     const donation = deriveDonationPda(campaign, donor.publicKey);
     await program.methods
-      .donate(campaignId, new BN(120_000_000))
+      .donate(new BN(120_000_000))
       .accounts({
         donor: donor.publicKey,
         campaign,
@@ -316,7 +316,7 @@ describe("crowdfi", () => {
     await sleep(9_000);
 
     await program.methods
-      .refund(campaignId)
+      .refund()
       .accounts({
         donor: donor.publicKey,
         campaign,
@@ -332,7 +332,7 @@ describe("crowdfi", () => {
 
     await expectAnchorError(
       program.methods
-        .refund(campaignId)
+        .refund()
         .accounts({
           donor: donor.publicKey,
           campaign,
@@ -358,7 +358,7 @@ describe("crowdfi", () => {
     const donation = deriveDonationPda(campaign, donor.publicKey);
     await expectAnchorError(
       program.methods
-        .donate(campaignId, new BN(0))
+        .donate(new BN(0))
         .accounts({
           donor: donor.publicKey,
           campaign,
