@@ -55,6 +55,13 @@ export type RefundInput = {
   campaignOwner: PublicKey;
 };
 
+export type DonationView = {
+  pubkey: PublicKey;
+  campaign: PublicKey;
+  donor: PublicKey;
+  amountLamports: bigint;
+};
+
 export function getConnectedWalletAddress(walletKey: WalletKey): string {
   return getWalletByKey(walletKey)?.publicKey?.toBase58() ?? "";
 }
@@ -126,6 +133,31 @@ export async function fetchCampaigns(
       } satisfies CampaignView;
     })
     .sort((a, b) => b.endTime - a.endTime);
+}
+
+export async function fetchDonations(
+  cluster: ClusterKind = "devnet",
+  programId?: string | PublicKey,
+): Promise<DonationView[]> {
+  const program = createProgram({ cluster, programId });
+  const rows = await (program.account as {
+    donation: { all: () => Promise<Array<{ publicKey: PublicKey; account: unknown }>> };
+  }).donation.all();
+
+  return rows.map((row) => {
+    const acc = row.account as {
+      campaign: PublicKey;
+      donor: PublicKey;
+      amount: BN;
+    };
+
+    return {
+      pubkey: row.publicKey,
+      campaign: acc.campaign,
+      donor: acc.donor,
+      amountLamports: BigInt(acc.amount.toString()),
+    } satisfies DonationView;
+  });
 }
 
 export function deriveCampaignPda(owner: PublicKey, campaignId: bigint, programId?: string | PublicKey) {
