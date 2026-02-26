@@ -62,6 +62,31 @@ export type DonationView = {
   amountLamports: bigint;
 };
 
+export function txUrl(signature: string, cluster: ClusterKind) {
+  return `https://orbmarkets.io/tx/${signature}?cluster=${cluster}&tab=summary`;
+}
+
+export function programUrl(cluster: ClusterKind) {
+  return `https://explorer.solana.com/address/${CROWDFI_PROGRAM_ID.toBase58()}?cluster=${cluster}`;
+}
+
+function campaignIdStorageKey(cluster: ClusterKind) {
+  return `crowdfi:campaign-id-map:${cluster}:${CROWDFI_PROGRAM_ID.toBase58()}`;
+}
+
+export function loadCampaignIdMap(cluster: ClusterKind): Record<string, string> {
+  if (typeof window === "undefined") return {};
+  const raw = window.localStorage.getItem(campaignIdStorageKey(cluster));
+  return raw ? (JSON.parse(raw) as Record<string, string>) : {};
+}
+
+export function saveCampaignId(cluster: ClusterKind, campaign: PublicKey, campaignId: bigint) {
+  if (typeof window === "undefined") return;
+  const current = loadCampaignIdMap(cluster);
+  const next = { ...current, [campaign.toBase58()]: campaignId.toString() };
+  window.localStorage.setItem(campaignIdStorageKey(cluster), JSON.stringify(next));
+}
+
 export function getConnectedWalletAddress(walletKey: WalletKey): string {
   return getWalletByKey(walletKey)?.publicKey?.toBase58() ?? "";
 }

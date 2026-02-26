@@ -1,15 +1,15 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Loader2, RefreshCw, Wallet } from "lucide-react";
+import { ArrowUpRight, Loader2, RefreshCw, Wallet } from "lucide-react";
 import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { toast } from "@/components/ui/sonner";
 import {
   CLUSTER_ENDPOINTS,
   CROWDFI_PROGRAM_ID,
@@ -23,6 +23,7 @@ import {
   fetchDonations,
   getAvailableWallets,
   getConnectedWalletAddress,
+  programUrl,
 } from "@/lib/crowdfi-client";
 
 function lamportsToSol(value: bigint) {
@@ -38,7 +39,6 @@ export default function MyDonationsPage() {
   const [cluster, setCluster] = useState<ClusterKind>("devnet");
   const [walletKey, setWalletKey] = useState<WalletKey>("phantom");
   const [walletPk, setWalletPk] = useState("");
-  const [programIdInput, setProgramIdInput] = useState(CROWDFI_PROGRAM_ID.toBase58());
   const [status, setStatus] = useState("Connect wallet to load your donations.");
   const [loading, setLoading] = useState(false);
 
@@ -56,10 +56,7 @@ export default function MyDonationsPage() {
 
     try {
       setLoading(true);
-      const [campaignRows, donationRows] = await Promise.all([
-        fetchCampaigns(cluster, programIdInput.trim()),
-        fetchDonations(cluster, programIdInput.trim()),
-      ]);
+      const [campaignRows, donationRows] = await Promise.all([fetchCampaigns(cluster), fetchDonations(cluster)]);
 
       const pk = new PublicKey(walletPk);
       setCampaigns(campaignRows);
@@ -67,10 +64,14 @@ export default function MyDonationsPage() {
       setStatus(`Synced ${donationRows.length} donation records.`);
     } catch (err) {
       setStatus(err instanceof Error ? err.message : "Failed to fetch donations");
+      toast.error({
+        title: "Donation sync failed",
+        description: err instanceof Error ? err.message : "Unknown error",
+      });
     } finally {
       setLoading(false);
     }
-  }, [cluster, programIdInput, walletPk]);
+  }, [cluster, walletPk]);
 
   useEffect(() => {
     void refresh();
@@ -81,8 +82,10 @@ export default function MyDonationsPage() {
       const pk = await connectWallet(walletKey);
       setWalletPk(pk.toBase58());
       setStatus(`Connected: ${shortPk(pk)}`);
+      toast.success({ title: "Wallet connected", description: shortPk(pk) });
     } catch (err) {
       setStatus(err instanceof Error ? err.message : "Wallet connection failed");
+      toast.error({ title: "Wallet connection failed", description: err instanceof Error ? err.message : "Unknown error" });
     }
   }
 
@@ -92,8 +95,10 @@ export default function MyDonationsPage() {
       setWalletPk("");
       setDonations([]);
       setStatus("Wallet disconnected.");
+      toast.info({ title: "Wallet disconnected" });
     } catch (err) {
       setStatus(err instanceof Error ? err.message : "Wallet disconnect failed");
+      toast.error({ title: "Wallet disconnect failed", description: err instanceof Error ? err.message : "Unknown error" });
     }
   }
 
@@ -110,7 +115,7 @@ export default function MyDonationsPage() {
           <h1 className="text-3xl font-semibold tracking-tight text-slate-900">My Donations</h1>
           <p className="mt-2 text-sm text-slate-600">Track your Donation PDAs and campaign outcomes in one place.</p>
 
-          <div className="mt-5 grid gap-3 md:grid-cols-4">
+          <div className="mt-5 grid gap-3 md:grid-cols-3">
             <div className="space-y-1">
               <Label>Cluster</Label>
               <Select value={cluster} onValueChange={(value) => setCluster(value as ClusterKind)}>
@@ -133,9 +138,11 @@ export default function MyDonationsPage() {
               </Select>
             </div>
 
-            <div className="space-y-1 md:col-span-2">
-              <Label>Program ID</Label>
-              <Input className="bg-white" value={programIdInput} onChange={(e) => setProgramIdInput(e.target.value)} />
+            <div className="space-y-1">
+              <Label>Program</Label>
+              <div className="rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-700">
+                {shortPk(CROWDFI_PROGRAM_ID)}
+              </div>
             </div>
           </div>
 
@@ -152,6 +159,13 @@ export default function MyDonationsPage() {
 
             <Button variant="outline" className="bg-white" onClick={refresh} disabled={loading || !walletPk}>
               {loading ? <Loader2 className="animate-spin" /> : <RefreshCw />} Refresh
+            </Button>
+
+            <Button variant="outline" className="bg-white" asChild>
+              <a href={programUrl(cluster)} rel="noreferrer" target="_blank">
+                View Program
+                <ArrowUpRight />
+              </a>
             </Button>
 
             <Badge variant="outline">Wallets Detected: {walletOptionsCount}</Badge>

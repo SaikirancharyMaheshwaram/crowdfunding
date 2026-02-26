@@ -120,33 +120,7 @@
         },
         {
           "name": "campaign",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  99,
-                  97,
-                  109,
-                  112,
-                  97,
-                  105,
-                  103,
-                  110
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "campaign.owner",
-                "account": "Campaign"
-              },
-              {
-                "kind": "arg",
-                "path": "campaign_id"
-              }
-            ]
-          }
+          "writable": true
         },
         {
           "name": "vault",
@@ -205,10 +179,6 @@
         }
       ],
       "args": [
-        {
-          "name": "campaign_id",
-          "type": "u64"
-        },
         {
           "name": "amount",
           "type": "u64"
@@ -235,33 +205,7 @@
         },
         {
           "name": "campaign",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  99,
-                  97,
-                  109,
-                  112,
-                  97,
-                  105,
-                  103,
-                  110
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "campaign.owner",
-                "account": "Campaign"
-              },
-              {
-                "kind": "arg",
-                "path": "campaign_id"
-              }
-            ]
-          }
+          "writable": true
         },
         {
           "name": "vault",
@@ -319,12 +263,7 @@
           "address": "11111111111111111111111111111111"
         }
       ],
-      "args": [
-        {
-          "name": "campaign_id",
-          "type": "u64"
-        }
-      ]
+      "args": []
     },
     {
       "name": "withdraw",
@@ -349,32 +288,7 @@
         },
         {
           "name": "campaign",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  99,
-                  97,
-                  109,
-                  112,
-                  97,
-                  105,
-                  103,
-                  110
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "owner"
-              },
-              {
-                "kind": "arg",
-                "path": "campaign_id"
-              }
-            ]
-          }
+          "writable": true
         },
         {
           "name": "vault",
@@ -403,12 +317,7 @@
           "address": "11111111111111111111111111111111"
         }
       ],
-      "args": [
-        {
-          "name": "campaign_id",
-          "type": "u64"
-        }
-      ]
+      "args": []
     }
   ],
   "accounts": [
