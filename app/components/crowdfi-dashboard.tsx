@@ -162,7 +162,10 @@ export function CrowdfiDashboard() {
   const explorerHref = programUrl(cluster);
 
   function getKnownCampaignId(campaign: CampaignView) {
-    return campaignIdMap[campaign.pubkey.toBase58()] ?? "";
+    const mapped = campaignIdMap[campaign.pubkey.toBase58()];
+    if (mapped) return mapped;
+    if (campaign.campaignId > BigInt(0)) return campaign.campaignId.toString();
+    return "";
   }
 
   function requireWallet() {

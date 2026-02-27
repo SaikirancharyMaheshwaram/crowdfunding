@@ -1,5 +1,5 @@
 {
-  "address": "DfmybnA8gNDbkDVCXwMKjvEKRNmiC4tJirPSb3hxkKuG",
+  "address": "FYoDEPSb4Xf5oVqKcqpE8myQjsm1873bPd4k6fE5oD6L",
   "metadata": {
     "name": "crowdfi",
     "version": "0.1.0",
@@ -9,16 +9,7 @@
   "instructions": [
     {
       "name": "create_campaign",
-      "discriminator": [
-        111,
-        131,
-        187,
-        98,
-        160,
-        193,
-        114,
-        244
-      ],
+      "discriminator": [111, 131, 187, 98, 160, 193, 114, 244],
       "accounts": [
         {
           "name": "signer",
@@ -32,16 +23,7 @@
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  99,
-                  97,
-                  109,
-                  112,
-                  97,
-                  105,
-                  103,
-                  110
-                ]
+                "value": [99, 97, 109, 112, 97, 105, 103, 110]
               },
               {
                 "kind": "account",
@@ -61,13 +43,7 @@
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  118,
-                  97,
-                  117,
-                  108,
-                  116
-                ]
+                "value": [118, 97, 117, 108, 116]
               },
               {
                 "kind": "account",
@@ -102,16 +78,7 @@
     },
     {
       "name": "donate",
-      "discriminator": [
-        121,
-        186,
-        218,
-        211,
-        73,
-        70,
-        196,
-        180
-      ],
+      "discriminator": [121, 186, 218, 211, 73, 70, 196, 180],
       "accounts": [
         {
           "name": "donor",
@@ -120,7 +87,24 @@
         },
         {
           "name": "campaign",
-          "writable": true
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [99, 97, 109, 112, 97, 105, 103, 110]
+              },
+              {
+                "kind": "account",
+                "path": "campaign.owner",
+                "account": "Campaign"
+              },
+              {
+                "kind": "arg",
+                "path": "campaign_id"
+              }
+            ]
+          }
         },
         {
           "name": "vault",
@@ -129,13 +113,7 @@
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  118,
-                  97,
-                  117,
-                  108,
-                  116
-                ]
+                "value": [118, 97, 117, 108, 116]
               },
               {
                 "kind": "account",
@@ -151,16 +129,7 @@
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  100,
-                  111,
-                  110,
-                  97,
-                  116,
-                  105,
-                  111,
-                  110
-                ]
+                "value": [100, 111, 110, 97, 116, 105, 111, 110]
               },
               {
                 "kind": "account",
@@ -180,6 +149,10 @@
       ],
       "args": [
         {
+          "name": "campaign_id",
+          "type": "u64"
+        },
+        {
           "name": "amount",
           "type": "u64"
         }
@@ -187,16 +160,7 @@
     },
     {
       "name": "refund",
-      "discriminator": [
-        2,
-        96,
-        183,
-        251,
-        63,
-        208,
-        46,
-        46
-      ],
+      "discriminator": [2, 96, 183, 251, 63, 208, 46, 46],
       "accounts": [
         {
           "name": "donor",
@@ -205,7 +169,24 @@
         },
         {
           "name": "campaign",
-          "writable": true
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [99, 97, 109, 112, 97, 105, 103, 110]
+              },
+              {
+                "kind": "account",
+                "path": "campaign.owner",
+                "account": "Campaign"
+              },
+              {
+                "kind": "arg",
+                "path": "campaign_id"
+              }
+            ]
+          }
         },
         {
           "name": "vault",
@@ -214,13 +195,7 @@
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  118,
-                  97,
-                  117,
-                  108,
-                  116
-                ]
+                "value": [118, 97, 117, 108, 116]
               },
               {
                 "kind": "account",
@@ -236,16 +211,7 @@
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  100,
-                  111,
-                  110,
-                  97,
-                  116,
-                  105,
-                  111,
-                  110
-                ]
+                "value": [100, 111, 110, 97, 116, 105, 111, 110]
               },
               {
                 "kind": "account",
@@ -263,32 +229,42 @@
           "address": "11111111111111111111111111111111"
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "campaign_id",
+          "type": "u64"
+        }
+      ]
     },
     {
       "name": "withdraw",
-      "discriminator": [
-        183,
-        18,
-        70,
-        156,
-        148,
-        109,
-        161,
-        34
-      ],
+      "discriminator": [183, 18, 70, 156, 148, 109, 161, 34],
       "accounts": [
         {
           "name": "owner",
           "writable": true,
           "signer": true,
-          "relations": [
-            "campaign"
-          ]
+          "relations": ["campaign"]
         },
         {
           "name": "campaign",
-          "writable": true
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [99, 97, 109, 112, 97, 105, 103, 110]
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              },
+              {
+                "kind": "arg",
+                "path": "campaign_id"
+              }
+            ]
+          }
         },
         {
           "name": "vault",
@@ -297,13 +273,7 @@
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  118,
-                  97,
-                  117,
-                  108,
-                  116
-                ]
+                "value": [118, 97, 117, 108, 116]
               },
               {
                 "kind": "account",
@@ -317,35 +287,22 @@
           "address": "11111111111111111111111111111111"
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "campaign_id",
+          "type": "u64"
+        }
+      ]
     }
   ],
   "accounts": [
     {
       "name": "Campaign",
-      "discriminator": [
-        50,
-        40,
-        49,
-        11,
-        157,
-        220,
-        229,
-        192
-      ]
+      "discriminator": [50, 40, 49, 11, 157, 220, 229, 192]
     },
     {
       "name": "Donation",
-      "discriminator": [
-        189,
-        210,
-        54,
-        77,
-        216,
-        85,
-        7,
-        68
-      ]
+      "discriminator": [189, 210, 54, 77, 216, 85, 7, 68]
     }
   ],
   "errors": [
@@ -463,6 +420,10 @@
           {
             "name": "title",
             "type": "string"
+          },
+          {
+            "name": "campaign_id",
+            "type": "u64"
           }
         ]
       }

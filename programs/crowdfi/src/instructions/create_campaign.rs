@@ -42,7 +42,7 @@ pub struct CreateCampaign<'info> {
 
 pub fn handler(
     ctx: Context<CreateCampaign>,
-    _campaign_id: u64,
+    campaign_id: u64,
     title: String,
     goal: u64,
     end_time: i64,
@@ -70,6 +70,7 @@ pub fn handler(
     campaign.end_time = end_time;
     campaign.withdrawn = false;
     campaign.bump = ctx.bumps.campaign;
-
+    campaign.campaign_id=campaign_id;
+    msg!("{:?} Campaign",campaign);
     Ok(())
 }

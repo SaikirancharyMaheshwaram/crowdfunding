@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 
 #[account]
-#[derive(InitSpace)]
+#[derive(InitSpace,Debug)]
 pub struct Campaign {
     pub owner: Pubkey,
     pub goal: u64,
@@ -11,4 +11,5 @@ pub struct Campaign {
     pub bump: u8,
     #[max_len(25)]
     pub title: String,
+    pub campaign_id:u64,
 }
